@@ -1,0 +1,94 @@
+/* ============================================================
+   ARDUINO MPB — Estilos Globais
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #f0f0f0; color: #1a1a1a; }
+.page { max-width: 860px; margin: 0 auto; padding: 2rem 1rem 5rem; }
+h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.sub { font-size: 14px; color: #666; margin-bottom: 1.8rem; }
+
+/* ── ABAS ── */
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tab { padding: 9px 18px; border-radius: 8px 8px 0 0; font-size: 14px; cursor: pointer; border: 1px solid #ccc; border-bottom: none; background: #ddd; color: #555; font-weight: 500; }
+.tab.active { background: #fff; color: #111; }
+.tab-content { display: none; background: #fff; border: 1px solid #ccc; border-radius: 0 8px 8px 8px; padding: 1.5rem; }
+.tab-content.active { display: block; }
+
+/* ── BIBLIOTECA ── */
+.lib-toolbar { display: flex; gap: 8px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
+.lib-search { flex: 1; min-width: 180px; padding: 9px 14px; border: 1.5px solid #ccc; border-radius: 8px; font-size: 14px; outline: none; }
+.lib-search:focus { border-color: #444; }
+.btn-green { padding: 9px 18px; background: #1a7a1a; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+.btn-green:hover { background: #156015; }
+
+.song-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 10px; margin-bottom: 1.2rem; }
+.song-card { background: #f8f8f8; border: 1.5px solid #e0e0e0; border-radius: 10px; padding: 13px 13px 36px; cursor: pointer; position: relative; transition: border-color .15s, box-shadow .15s; }
+.song-card:hover { border-color: #888; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.song-card.selected { border-color: #1a1a1a; background: #f0f0f0; }
+.s-name { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
+.s-artist { font-size: 12px; color: #666; margin-bottom: 7px; }
+.s-genre { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 99px; background: #e0e0e0; color: #555; }
+.s-bpm { position: absolute; top: 10px; right: 10px; font-size: 10px; color: #aaa; }
+.s-custom { position: absolute; top: 10px; left: 10px; font-size: 10px; background: #fff3cd; color: #856404; padding: 1px 6px; border-radius: 99px; }
+.btn-del { position: absolute; bottom: 8px; right: 10px; background: none; border: none; cursor: pointer; font-size: 18px; opacity: .3; line-height: 1; }
+.btn-del:hover { opacity: 1; color: #cc0000; }
+.no-results { text-align: center; color: #999; font-size: 14px; padding: 2.5rem; grid-column: 1 / -1; }
+
+/* ── CAIXA DE CÓDIGO ── */
+.codebox { background: #1e1e1e; border-radius: 10px; padding: 1.2rem; margin-top: 1rem; }
+.codebox-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+.song-lbl { color: #aaa; font-size: 13px; }
+.copy-btn { padding: 5px 14px; background: #444; color: #fff; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
+.copy-btn:hover { background: #666; }
+pre { color: #d4d4d4; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow-y: auto; line-height: 1.6; }
+.tip { margin-top: 10px; font-size: 12px; color: #aaa; background: #252525; padding: 8px 12px; border-radius: 6px; line-height: 1.6; }
+
+/* ── MODAL ADICIONAR ── */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 100; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: #fff; border-radius: 14px; padding: 1.5rem; width: 92%; max-width: 560px; max-height: 92vh; overflow-y: auto; }
+.modal h2 { font-size: 18px; margin-bottom: .3rem; }
+.modal .modal-sub { font-size: 13px; color: #888; margin-bottom: 1rem; }
+.modal label { font-size: 13px; font-weight: 600; color: #333; display: block; margin-bottom: 4px; margin-top: 12px; }
+.modal input, .modal textarea { width: 100%; padding: 9px 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 13px; outline: none; font-family: monospace; }
+.modal input:focus, .modal textarea:focus { border-color: #444; }
+.modal textarea { min-height: 110px; resize: vertical; }
+.modal-hint { font-size: 11px; color: #888; margin-top: 5px; line-height: 1.5; }
+.modal-footer { display: flex; gap: 8px; margin-top: 1.2rem; justify-content: flex-end; }
+.btn-cancel { padding: 9px 18px; background: #eee; color: #333; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.btn-save { padding: 9px 18px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 600; }
+
+/* ── ABA IA / GROQ ── */
+.apikey-box { background: #fff8e1; border: 1.5px solid #f0c040; border-radius: 10px; padding: 14px 16px; margin-bottom: 1.2rem; }
+.apikey-box label { font-size: 13px; font-weight: 700; color: #7a5c00; display: block; margin-bottom: 6px; }
+.apikey-row { display: flex; gap: 8px; align-items: center; }
+.apikey-row input { flex: 1; padding: 8px 12px; border: 1.5px solid #e0c060; border-radius: 8px; font-size: 13px; font-family: monospace; background: #fffdf0; outline: none; }
+.apikey-hint { font-size: 11px; color: #9a7a20; margin-top: 6px; }
+.apikey-hint a { color: #7a5000; }
+.gen-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+.gen-row input { flex: 1; padding: 10px 14px; border: 1.5px solid #ccc; border-radius: 8px; font-size: 15px; outline: none; }
+.gen-row input:focus { border-color: #444; }
+button.main { padding: 10px 20px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; white-space: nowrap; font-weight: 600; }
+button.main:disabled { background: #999; cursor: not-allowed; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.2rem; }
+.chip { font-size: 12px; padding: 5px 12px; border: 1px solid #ccc; border-radius: 99px; cursor: pointer; background: #f5f5f5; color: #444; }
+.chip:hover { background: #e8e8e8; }
+.status { font-size: 13px; color: #666; min-height: 20px; margin-bottom: 1rem; }
+.btn-save-gen { margin-top: 10px; padding: 8px 18px; background: #1a7a1a; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.btn-save-gen:hover { background: #156015; }
+.btn-toggle { padding: 8px 14px; background: #555; color: #fff; border: none; border-radius: 8px; font-size: 12px; cursor: pointer; }
+
+/* ── COMPONENTES ── */
+.comp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.comp-card { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 10px; padding: 1rem; text-align: center; }
+.comp-card svg { display: block; margin: 0 auto 10px; }
+.comp-name { font-size: 13px; font-weight: 700; color: #222; margin-bottom: 4px; }
+.comp-desc { font-size: 11px; color: #666; line-height: 1.5; }
+
+/* ── CIRCUITO ── */
+.circuit-wrap { background: #162016; border-radius: 10px; padding: 1rem; overflow-x: auto; }
+.steps { margin-top: 1.2rem; }
+.step { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+.step-num { background: #222; color: #fff; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.step p { font-size: 13px; color: #333; line-height: 1.6; }
