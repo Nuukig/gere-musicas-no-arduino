@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arduino MPB — Biblioteca Musical</title>
+
+  <!-- Estilos separados -->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div class="page">
+  <h1>🎵 Arduino MPB — Biblioteca Musical</h1>
+  <p class="sub">Toque MPB no seu buzzer · biblioteca editável · IA gratuita (Groq) · salvo no navegador</p>
+
+  <!-- Abas -->
+  <div class="tabs">
+    <div class="tab active"  onclick="showTab('biblioteca', this)">📚 Biblioteca</div>
+    <div class="tab"         onclick="showTab('ia', this)">🤖 Gerar com IA</div>
+    <div class="tab"         onclick="showTab('componentes', this)">🔩 Componentes</div>
+    <div class="tab"         onclick="showTab('circuito', this)">⚡ Ligação</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ABA: BIBLIOTECA
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-biblioteca">
+    <div class="lib-toolbar">
+      <input class="lib-search" id="searchInput"
+             placeholder="🔍 Buscar música ou artista..."
+             oninput="renderLibrary()"/>
+      <button class="btn-green" onclick="openModal()">➕ Adicionar música</button>
+    </div>
+    <div class="song-grid" id="songGrid"></div>
+    <div id="codeArea"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ABA: GERAR COM IA (GROQ)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-ia">
+
+    <!-- Chave de API -->
+    <div class="apikey-box">
+      <label>🔑 Chave de API do Groq (gratuita, sem cartão)</label>
+      <div class="apikey-row">
+        <input type="password" id="groqKey" placeholder="gsk_..." autocomplete="off"/>
+        <button class="btn-toggle" id="toggleKeyBtn" onclick="toggleKey()">Mostrar</button>
+      </div>
+      <p class="apikey-hint">
+        Crie sua chave grátis em
+        <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a>
+        → "Create API Key". Sem cartão de crédito.
+      </p>
+    </div>
+
+    <!-- Campo de busca + botão -->
+    <div class="gen-row">
+      <input type="text" id="songInput"
+             placeholder="Ex: Flor de Maracujá, Travessia, O Barquinho..."/>
+      <button class="main" id="genBtn" onclick="generateWithGroq()">Gerar código</button>
+    </div>
+
+    <!-- Chips de atalho MPB -->
+    <div class="chips" id="mpbChips"></div>
+
+    <!-- Status -->
+    <div class="status" id="genStatus"></div>
+
+    <!-- Resultado gerado -->
+    <div id="genResult" style="display:none">
+      <div class="codebox">
+        <div class="codebox-hdr">
+          <span class="song-lbl" id="genLbl"></span>
+          <button class="copy-btn" onclick="copyGen()">Copiar código</button>
+        </div>
+        <pre id="genOut"></pre>
+        <div class="tip">Se necessário, ajuste <code>int tempo</code> no início do código.</div>
+      </div>
+      <button class="btn-save-gen" onclick="saveGenerated()">💾 Salvar na biblioteca</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ABA: COMPONENTES
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-componentes">
+    <div class="comp-grid">
+
+      <div class="comp-card">
+        <svg width="120" height="110" viewBox="0 0 120 110">
+          <rect x="5" y="8" width="110" height="92" rx="6" fill="#006699" stroke="#004477" stroke-width="1.5"/>
+          <rect x="12" y="16" width="96" height="76" rx="4" fill="#0077bb"/>
+          <rect x="3" y="26" width="12" height="20" rx="3" fill="#aaa" stroke="#888" stroke-width="1"/>
+          <rect x="107" y="18" width="6" height="68" rx="2" fill="#111"/>
+          <rect x="32" y="38" width="50" height="32" rx="3" fill="#111"/>
+          <text x="57" y="58" text-anchor="middle" font-size="7" fill="#666">ATmega2560</text>
+          <rect x="105" y="60" width="9" height="5" rx="1" fill="#ffcc00"/>
+          <text x="103" y="59" text-anchor="end" font-size="7" fill="#ffcc00">11</text>
+          <rect x="105" y="72" width="9" height="5" rx="1" fill="#44dd44"/>
+          <text x="103" y="71" text-anchor="end" font-size="7" fill="#44dd44">GND</text>
+          <text x="60" y="96" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">ARDUINO MEGA 2560</text>
+        </svg>
+        <div class="comp-name">Arduino Mega 2560</div>
+        <div class="comp-desc">Microcontrolador principal. Pino 11 e GND para o buzzer.</div>
+      </div>
+
+      <div class="comp-card">
+        <svg width="120" height="110" viewBox="0 0 120 110">
+          <circle cx="60" cy="52" r="38" fill="#111" stroke="#333" stroke-width="2"/>
+          <circle cx="60" cy="52" r="30" fill="#1a1a1a"/>
+          <circle cx="60" cy="52" r="18" fill="#2a2a2a"/>
+          <circle cx="60" cy="52" r="7" fill="#444"/>
+          <line x1="50" y1="90" x2="50" y2="108" stroke="#c0a020" stroke-width="3.5"/>
+          <line x1="70" y1="90" x2="70" y2="108" stroke="#c0a020" stroke-width="3.5"/>
+          <text x="44" y="110" font-size="10" fill="#e03030" font-weight="bold">+</text>
+          <text x="66" y="110" font-size="10" fill="#888">–</text>
+          <text x="60" y="16" text-anchor="middle" font-size="9" fill="#aaa" font-weight="bold">BUZZER</text>
+        </svg>
+        <div class="comp-name">Buzzer Piezoelétrico</div>
+        <div class="comp-desc">Pino + ao pino 11. Pino – ao GND.</div>
+      </div>
+
+      <div class="comp-card">
+        <svg width="120" height="110" viewBox="0 0 120 110">
+          <path d="M12,35 Q38,18 68,30 Q98,42 110,33" stroke="#e03030" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="12" cy="35" r="6" fill="#c00"/>
+          <circle cx="110" cy="33" r="6" fill="#c00"/>
+          <path d="M12,65 Q45,52 78,63 Q100,71 110,63" stroke="#222" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="12" cy="65" r="6" fill="#111"/>
+          <circle cx="110" cy="63" r="6" fill="#111"/>
+          <text x="60" y="100" text-anchor="middle" font-size="9" fill="#555">JUMPERS</text>
+        </svg>
+        <div class="comp-name">Jumpers</div>
+        <div class="comp-desc">Cabos macho-macho para ligar o buzzer ao Arduino.</div>
+      </div>
+
+      <div class="comp-card">
+        <svg width="120" height="110" viewBox="0 0 120 110">
+          <line x1="8" y1="55" x2="30" y2="55" stroke="#999" stroke-width="2.5"/>
+          <line x1="90" y1="55" x2="112" y2="55" stroke="#999" stroke-width="2.5"/>
+          <rect x="30" y="42" width="60" height="26" rx="9" fill="#d4b484" stroke="#b8904a" stroke-width="1.5"/>
+          <rect x="43" y="42" width="5" height="26" rx="1" fill="#8B4513"/>
+          <rect x="53" y="42" width="5" height="26" rx="1" fill="#111"/>
+          <rect x="63" y="42" width="5" height="26" rx="1" fill="#111"/>
+          <rect x="75" y="42" width="5" height="26" rx="1" fill="#c0a000"/>
+          <text x="60" y="95" text-anchor="middle" font-size="11" fill="#555" font-weight="bold">100Ω</text>
+          <text x="60" y="108" text-anchor="middle" font-size="9" fill="#888">(opcional)</text>
+        </svg>
+        <div class="comp-name">Resistor 100Ω</div>
+        <div class="comp-desc">Opcional. Protege o pino e melhora a qualidade do som.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ABA: LIGAÇÃO
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-circuito">
+    <div class="circuit-wrap">
+      <svg width="660" height="310" viewBox="0 0 660 310" style="max-width:100%">
+        <rect x="20" y="30" width="155" height="250" rx="8" fill="#006699" stroke="#004477" stroke-width="2"/>
+        <rect x="28" y="40" width="139" height="232" rx="5" fill="#0077bb"/>
+        <rect x="8" y="60" width="14" height="24" rx="3" fill="#aaa" stroke="#888" stroke-width="1"/>
+        <rect x="52" y="110" width="78" height="52" rx="4" fill="#111"/>
+        <text x="91" y="140" text-anchor="middle" font-size="8" fill="#666">ATmega2560</text>
+        <rect x="173" y="50" width="6" height="218" rx="2" fill="#111"/>
+        <rect x="171" y="158" width="10" height="7" rx="1" fill="#ffcc00"/>
+        <text x="169" y="157" text-anchor="end" font-size="8" fill="#ffcc00" font-weight="bold">Pin 11</text>
+        <rect x="171" y="178" width="10" height="7" rx="1" fill="#44dd44"/>
+        <text x="169" y="177" text-anchor="end" font-size="8" fill="#44dd44" font-weight="bold">GND</text>
+        <text x="100" y="248" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">ARDUINO MEGA</text>
+        <rect x="285" y="152" width="58" height="20" rx="7" fill="#d4b484" stroke="#b8904a" stroke-width="1.5"/>
+        <rect x="297" y="152" width="5" height="20" rx="1" fill="#8B4513"/>
+        <rect x="306" y="152" width="5" height="20" rx="1" fill="#111"/>
+        <rect x="315" y="152" width="5" height="20" rx="1" fill="#111"/>
+        <rect x="326" y="152" width="5" height="20" rx="1" fill="#c0a000"/>
+        <text x="314" y="186" text-anchor="middle" font-size="8" fill="#999">100Ω (opcional)</text>
+        <circle cx="520" cy="162" r="44" fill="#111" stroke="#333" stroke-width="2"/>
+        <circle cx="520" cy="162" r="34" fill="#1a1a1a"/>
+        <circle cx="520" cy="162" r="20" fill="#252525"/>
+        <text x="520" y="118" text-anchor="middle" font-size="10" fill="#aaa" font-weight="bold">BUZZER</text>
+        <line x1="510" y1="206" x2="510" y2="228" stroke="#e03030" stroke-width="3"/>
+        <line x1="530" y1="206" x2="530" y2="228" stroke="#555" stroke-width="3"/>
+        <text x="505" y="240" font-size="11" fill="#e03030" font-weight="bold">+</text>
+        <text x="526" y="240" font-size="11" fill="#888">–</text>
+        <polyline points="181,161 285,161" stroke="#e03030" stroke-width="2.5" fill="none" stroke-dasharray="6,3"/>
+        <polyline points="343,161 510,161 510,206" stroke="#e03030" stroke-width="2.5" fill="none"/>
+        <polyline points="181,181 248,181 248,272 530,272 530,228" stroke="#33aa33" stroke-width="2.5" fill="none"/>
+        <text x="230" y="157" font-size="8" fill="#ff8888">fio vermelho → pino 11</text>
+        <text x="260" y="265" font-size="8" fill="#88ee88">fio preto → GND → buzzer –</text>
+        <rect x="20" y="290" width="620" height="16" rx="4" fill="#1a3a1a"/>
+        <text x="330" y="302" text-anchor="middle" font-size="9" fill="#55cc77">
+          ✔ Sem resistor também funciona — com 100Ω protege o Arduino e melhora o som
+        </text>
+      </svg>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <p>Conecte o <strong>pino + do buzzer</strong> ao <strong>pino 11 do Arduino Mega</strong>. Se quiser, coloque um resistor 100Ω em série.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p>Conecte o <strong>pino – do buzzer</strong> a qualquer pino <strong>GND do Arduino Mega</strong>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p>Na aba <strong>📚 Biblioteca</strong>, escolha uma música, copie o código e cole no <strong>Arduino IDE</strong>. Clique em Upload.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <p>A música toca automaticamente! Ajuste <code>int tempo</code> se ficar rápida ou lenta. 🎵</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .page -->
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL — Adicionar música manualmente
+══════════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="addModal">
+  <div class="modal">
+    <h2>➕ Adicionar música</h2>
+    <p class="modal-sub">Cole o array de notas gerado pela IA ou escreva o seu.</p>
+
+    <label>Nome da música *</label>
+    <input type="text" id="addName" placeholder="Ex: Flor de Maracujá"/>
+
+    <label>Artista *</label>
+    <input type="text" id="addArtist" placeholder="Ex: Tim Maia"/>
+
+    <label>Gênero</label>
+    <input type="text" id="addGenre" placeholder="Ex: MPB, Samba, Forró..."/>
+
+    <label>BPM</label>
+    <input type="number" id="addTempo" placeholder="Ex: 120" min="40" max="300"/>
+
+    <label>Array de notas (melody[]) *</label>
+    <textarea id="addMelody"
+      placeholder="NOTE_A4,4, NOTE_CS5,4, NOTE_D5,4, REST,8, ..."></textarea>
+    <p class="modal-hint">
+      Formato padrão Arduino: pares de NOTA,DURAÇÃO separados por vírgula.<br>
+      Durações: 1=semibreve · 2=mínima · 4=semínima · 8=colcheia · 16=semicolcheia<br>
+      Valor negativo = nota pontuada (ex: -4). Use REST para silêncio.
+    </p>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save"   onclick="saveNewSong()">Salvar na biblioteca</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SCRIPTS — carregados em ordem
+══════════════════════════════════════════════════════════════ -->
+<script src="js/songs.js"></script>    <!-- banco de músicas MPB -->
+<script src="js/library.js"></script>  <!-- biblioteca, modal, localStorage -->
+<script src="js/groq.js"></script>     <!-- geração com IA Groq -->
+
+<script>
+  // ── Controle de abas ──────────────────────────────────────────
+  function showTab(name, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+    if (name === 'biblioteca') renderLibrary();
+  }
+
+  // ── Inicialização ─────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    renderLibrary();
+    initChips();
+    document.getElementById('songInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') generateWithGroq();
+    });
+  });
+</script>
+
+</body>
+</html>
